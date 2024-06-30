@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Wizard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #D4E6F1 ;
+            margin: 0;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .container {
+            background-color: #EAEDED;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+            margin: auto;
+        }
+        h2 {
+            font-family: 'Century Gothic';
+            font-weight: bold;
+            margin-bottom: 1em;
+            text-align: center;
+        }
+        .theme-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fff;
+            border: 1px solid rgb(179, 167, 167);
+            border-radius: 10px;
+            height: 380px;
+            width: 100%;
+        }
+        .theme-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(30, 29, 29, 0.795);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .recommended {
+            color: #28a745;
+            font-size: 0.8rem;
+            font-weight: normal;
+            font-family: 'Century Gothic';
+        }
+        .apply-button, .tick-button {
+            transition: all 0.3s ease;
+            border: 2px solid rgb(52, 152, 219);
+            color: rgb(52, 152, 219);
+            background-color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            width: 95px;
+            height: 40px;
+            font-family: 'Century Gothic';
+            font-weight: bold;
+            transition: background-color .15s ,color .15s;
+        }
+        .apply-button:hover {
+            color: white;
+            background-color: rgb(52, 152, 219);
+        }
+        .tick-button:hover {
+            background-color: rgb(52, 152, 219);
+            color: white;
+        }
+        .next-button {
+            margin-top: 20px;
+            transition: opacity 0.3s ease;
+            width: 95px;
+            font-family: 'Century Gothic';
+            font-weight: bold;
+        }
+        .next-button[disabled] {
+            opacity: 0.5;
+        }
+        .card-title {
+            font-family: 'Century Gothic';
+            font-weight: bold;
+        }
+
+        /* Page 2 Styles */
+        .container-page2 {
+            display: flex;
+            flex-wrap: wrap;
+            background-color: #EAEDED;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .form-section {
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        .form-section h2 {
+            margin-top: 0;
+        }
+        .form-section label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form-section input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-section .error-message {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+        }
+        .form-section .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-section button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-section .back-button {
+            background-color: #bbb;
+            color: white;
+        }
+        .form-section .next-button {
+            background-color: #4a90e2;
+            color: white;
+        }
+        .flowchart-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #c2e9af;
+            border-radius: 10px;
+            margin-top: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .box {
+            width: 150px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        .product-type {
+            background-color: #4a90e2;
+        }
+        .category, .sub-category {
+            background-color: #f5a623;
+        }
+        .product {
+            background-color: #bdc3c7;
+        }
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid black;
+            margin: 5px 0;
+        }
+        .vertical-line {
+            width: 2px;
+            height: 50px;
+            background-color: black;
+        }
+        .horizontal-arrow {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid black;
+            margin: 0 5px;
+        }
+        .horizontal-line {
+            display: flex;
+            align-items: center;
+        }
+        .horizontal-long-line {
+            width: 50px;
+            height: 2px;
+            background-color: black;
+        }
+        .back-button {
+            margin-top: 20px;
+            transition: opacity 0.3s ease;
+            width: 95px;
+            font-family: 'Century Gothic';
+            font-weight: bold;
+            background:   #707B7C  ;
+        }
+        .back-button:hover {
+            background-color:  rgb(166, 172, 175) ;
+        }
+        label.required:after {
+            content: " *";
+            color: red;
+        }
+        /*page 3*/
+        .container-3 {
+            display: flex;
+            width: 90%;
+            background: #EAEDED;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #form-section {
+            flex: 0 0 70%;
+        }
+        #preview-section {
+            flex: 1;
+        }
+        .scrollable {
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-check {
+            margin-bottom: 1rem;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 0.25rem;
+            display: none; /* initially hide error messages */
+        }
+        .error.active {
+            display: block; /* show error messages */
+        }
+        #preview {
+            border: 1px solid #e0e0e0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #preview img {
+            width: auto;
+            height: auto;
+            margin-bottom: 10px;
+            object-fit: contain;
+        }
+        #previewProductName {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .price-details {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .price-details .form-group {
+            flex: 1 1 48%;
+            margin-right: 2%;
+        }
+        .price-details .form-group:nth-child(2n) {
+            margin-right: 0;
+        }
+        .price-strike {
+            text-decoration: line-through;
+            color: red;
+        }
+        button {
+            margin-top: 10px;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        h4 {
+            margin-bottom: 15px;
+        }
+        .scrollable::-webkit-scrollbar {
+            width: 10px;
+        }
+        .scrollable::-webkit-scrollbar-track {
+            background: white;
+            border-radius: 10px;
+        }
+        .scrollable::-webkit-scrollbar-thumb {
+            background: #7F8C8D;
+            border-radius: 10px;
+        }
+        .scrollable::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        #preview .price-section {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+        #preview .price-section p {
+            margin: 0 10px;
+        }
+        #preview .price-final {
+            font-size: 1.5em;
+            color: #000;
+        }
+        #previewProductDescription {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 4px;
+            word-break: break-word;
+        }
+        label.required:after {
+            content: " *";
+            color: red;
+        }
+        .image-preview-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 5px;
+            padding-right: 25px;
+        }
+        .image-preview-wrapper img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+        }
+        .remove-image-icon, .move-left, .move-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .remove-image-icon:hover,.move-left:hover,.move-right:hover {
+        background-color: #E5E8E8;
+        border-color: #7F8C8D ;
+        }
+        .remove-image-icon {
+            right: 30px;
+            top: 5px;
+            transform: none;
+        }
+        .move-left {
+            left: -15px;
+        }
+        .move-right {
+            left: 90px;
+        }
+        .add-image-icon {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .preview-image-wrapper img {
+            max-width: 100%;
+            height: auto;
+        }
+        .preview-image-wrapper .placeholder{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #ccc;
+        }
+        .preview-image-wrapper img:hover {
+            transform: scale(1.05);
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        #preview .image-preview-wrapper img {
+        max-width: 200px; /* Increase to desired width */
+        max-height: 200px; /* Increase to desired height */
+        margin: 5px;
+        }
+        #previewProductDescription {
+        text-align: left;}
+    </style>
+</head>
+<body>
+    <div class="container mt-5" id="page1">
+        <h2>Apply a theme</h2>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card theme-card">
+                    <img src="theme1.jpg" class="card-img-top" alt="Bags Theme">
+                    <div class="card-body">
+                        <h5 class="card-title">Bags theme <span class="recommended">(recommended)</span></h5>
+                        <button class="btn apply-button">Apply</button>
+                        <button class="btn tick-button" style="display: none;"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card theme-card">
+                    <img src="theme2.jpg" class="card-img-top" alt="Flex Theme">
+                    <div class="card-body">
+                        <h5 class="card-title">Flex theme</h5>
+                        <button class="btn apply-button">Apply</button>
+                        <button class="btn tick-button" style="display: none;"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card theme-card">
+                    <img src="theme3.jpg" class="card-img-top" alt="Chic Theme">
+                    <div class="card-body">
+                        <h5 class="card-title">Chic theme</h5>
+                        <button class="btn apply-button">Apply</button>
+                        <button class="btn tick-button" style="display: none;"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <button class="btn btn-primary next-button" disabled>Next</button>
+        </div>
+    </div>
+    <div class="container-page2 mt-5" id="page2" style="display: none;">
+        <div class="form-section">
+            <h2>Let's add a type, Category, and Sub-category</h2>
+            <label for="product-type"class="required">Add a product type</label>
+            <input type="text" id="product-type" placeholder="e.g., books">
+            <div class="error-message" id="error-message">Please enter a valid product type.</div>
+            <label for="category">Add a category (optional)</label>
+            <input type="text" id="category" placeholder="e.g., Academic book">
+            <label for="sub-category">Add a sub-category (optional)</label>
+            <input type="text" id="sub-category" placeholder="e.g., medical book">
+            <div class="buttons">
+                <button class="back-button">Back</button>
+                <button class="next-button">Next</button>
+            </div>
+        </div>
+        <div class="flowchart-section">
+            <div class="flowchart">
+                <div class="box product-type">Product type</div>
+                <div class="vertical-line"></div>
+                <div class="arrow"></div>
+                <div class="box category">Category</div>
+                <div class="vertical-line"></div>
+                <div class="arrow"></div>
+                <div class="box sub-category">Sub-Category</div>
+                <div class="horizontal-line">
+                    <div class="horizontal-long-line"></div>
+                    <div class="horizontal-arrow"></div>
+                    <div class="box product">Product</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-3"id= "page3" style="display: none;">
+        <div class="col-md-8 scrollable" id="form-section">
+            <h2>Let's add your first product</h2>
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="productName" class="required">Product name</label>
+                    <input type="text" class="form-control" id="productName" placeholder="eg - anatomy book" maxlength="100">
+                    <div class="error" id="productNameError">Product name is required </div>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription" class="required">Product Description</label>
+                    <textarea class="form-control" id="productDescription" rows="3" maxlength="500"></textarea>
+                    <div class="error" id="productDescriptionError">Product description is required </div>
+                </div>
+                <div class="form-group">
+                    <label for="productImages" class="required">Add Image(s)</label>
+                    <div id="imageContainer">
+                        <div class="add-image-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="error" id="productImageError">Product image is required.</div>
+                    <div class="error" id="productImageSizeError">Image size cannot exceed 10 MB.</div>
+                    <div class="error" id="productImageFormatError">Invalid image format. Only JPG and PNG are accepted.</div>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="skuCheck">
+                    <label class="form-check-label" for="skuCheck">this product has an SKU code</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="skuCode" placeholder="eg - PROD0001" disabled>
+                    <div class="error" id="skuCodeError">SKU code is required.</div>
+                </div>
+                <hr>
+                <h4>Price Details</h4>
+                <div class="price-details">
+                    <div class="form-group">
+                        <label for="netPrice" class="required">Net price</label>
+                        <input type="text" class="form-control" id="netPrice" placeholder="eg - 900">
+                        <div class="error" id="netPriceError">Valid net price is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="listPrice" class="required">List price</label>
+                        <input type="text" class="form-control" id="listPrice" placeholder="eg - 1000">
+                        <div class="error" id="listPriceError">Valid list price is required.</div>
+                    </div>
+                </div>
+                <div class="price-details">
+                    <div class="form-group">
+                        <label for="discountPercentage" class="required">Discount percentage</label>
+                        <input type="text" class="form-control" id="discountPercentage" placeholder="eg - 10">
+                        <div class="error" id="discountPercentageError">Valid discount percentage is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gstRate" class="required">GST rate</label>
+                        <input type="text" class="form-control" id="gstRate" placeholder="eg - 18">
+                        <div class="error" id="gstRateError">Valid GST rate is required</div>
+                    </div>
+                </div>
+                <div class="price-details">
+                    <div class="form-group">
+                        <label for="shippingCharges">Shipping charges (if any)</label>
+                        <input type="text" class="form-control" id="shippingCharges" placeholder="eg - 40">
+                    </div>
+                    <div class="form-group">
+                        <label for="stockLevel" class="required">Stock level</label>
+                        <input type="text" class="form-control" id="stockLevel" placeholder="eg - 50">
+                        <div class="error" id="stockLevelError">Valid stock level is required</div>
+                    </div>
+                </div>
+                <hr>
+                <button type="button" class="btn btn-secondary" id="backButton">Back</button>
+                <button type="button" class="btn btn-primary" id="nextButton">Submit</button>
+            </form>
+        </div>
+        <div class="col-md-4 scrollable" id="preview-section">
+            <div id="preview">
+                <img id="previewImage" style="display:none;" />
+                <i class="fas fa-image" style="font-size: 100px; color: #e0e0e0;"></i>
+                <h3 id="previewProductName"></h3>
+                <p id="previewProductDescription"></p>
+                <div class="price-section">
+                    <p id="previewListPrice" class="price-strike">₹</p>
+                    <p id="previewNetPrice">₹0.00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+       $(document).ready(function() {
+    let selectedTheme = null;
+
+    // Page 1 navigation
+    $('.apply-button').click(function() {
+        $('.apply-button').show();
+        $('.tick-button').hide();
+        $(this).hide();
+        $(this).siblings('.tick-button').show();
+        selectedTheme = $(this).closest('.theme-card').find('.card-title').text();
+        $('.next-button').prop('disabled', false);
+    });
+
+    $('.next-button').click(function() {
+        if (selectedTheme) {
+            $('#page1').hide();
+            $('#page2').show();
+            $('#page3').hide();
+        }
+    });
+
+    // Page 2 navigation
+    $('#product-type').on('input', function() {
+        const value = $(this).val().trim();
+        if (value) {
+            $('#error-message').hide();
+            $('.form-section .next-button').prop('disabled', false);
+        } else {
+            $('#error-message').show();
+            $('.form-section .next-button').prop('disabled', true);
+        }
+    });
+
+    $('.form-section .next-button').click(function() {
+        const productType = $('#product-type').val().trim();
+        if (!productType) {
+            $('#error-message').show();
+        } else {
+            $('#page2').hide();
+            $('#page3').show();
+        }
+    });
+
+    // Page 3 navigation
+    $('#nextButton').click(function() {
+        if (validateForm()) {
+            alert('Form is valid! Submitting...');
+        } else {
+            // Scroll to the first error message
+            $('.error.active').first().parents('.scrollable').scrollTop($('.error.active').first().offset().top - $('.scrollable').offset().top);
+        }
+    });
+
+    $('.back-button').click(function() {
+        if ($('#page2').is(':visible')) {
+            $('#page2').hide();
+            $('#page1').show();
+        } else if ($('#page3').is(':visible')) {
+            $('#page3').hide();
+            $('#page2').show();
+        }
+    });
+
+    $('#backButton').click(function() {
+        $('#page3').hide();
+        $('#page2').show();
+    });
+
+    $('#skuCheck').change(function() {
+        if (this.checked) {
+            $('#skuCode').prop('disabled', false);
+        } else {
+            $('#skuCode').prop('disabled', true);
+            $('#skuCodeError').removeClass('active');
+        }
+    });
+
+    $(document).on('click', '.add-image-icon', function() {
+        let newFileInput = $('<input type="file" class="form-control-file d-none" accept=".jpg, .png" />');
+        $('#imageContainer').append(newFileInput);
+        newFileInput.click();
+        newFileInput.on('change', handleFileSelect);
+    });
+
+    function handleFileSelect(event) {
+        let file = event.target.files[0];
+        if (file) {
+            if (file.size > 10 * 1024 * 1024) {
+                $('#productImageSizeError').addClass('active');
+                return;
+            }
+            if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                $('#productImageFormatError').addClass('active');
+                return;
+            }
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let imagePreview = `
+                    <div class="image-preview-wrapper">
+                        <img src="${e.target.result}" />
+                        <i class="fas fa-trash remove-image-icon"></i>
+                        <i class="fas fa-arrow-left move-left"></i>
+                        <i class="fas fa-arrow-right move-right"></i>
+                    </div>
+                `;
+                $('#imageContainer').append(imagePreview);
+                updatePreviewImage();
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function updatePreviewImage() {
+        let imagePreviews = $('#imageContainer .image-preview-wrapper img');
+        if (imagePreviews.length > 0) {
+            let previewImageSrc = imagePreviews.map(function() {
+                return '<img src="' + $(this).attr('src') + '" style="max-width:200px; max-height:200px; margin: 5px;"/>';
+            }).get().join('');
+            $('#previewImage').hide();
+            $('#preview').find('.image-preview-wrapper').remove();
+            $('#preview').prepend('<div class="image-preview-wrapper">' + previewImageSrc + '</div>');
+            $('.fa-image').hide();
+        } else {
+            $('#preview').find('.image-preview-wrapper').remove();
+            $('#previewImage').hide();
+            $('.fa-image').show();
+        }
+    }
+
+    $(document).on('click', '.remove-image-icon', function() {
+        $(this).closest('.image-preview-wrapper').remove();
+        updatePreviewImage();
+    });
+
+    $(document).on('click', '.move-left', function() {
+        let wrapper = $(this).closest('.image-preview-wrapper');
+        wrapper.insertBefore(wrapper.prev());
+        updatePreviewImage();
+    });
+
+    $(document).on('click', '.move-right', function() {
+        let wrapper = $(this).closest('.image-preview-wrapper');
+        wrapper.insertAfter(wrapper.next());
+        updatePreviewImage();
+    });
+
+    function validateForm() {
+        let isValid = true;
+
+        // Reset all errors
+        $('.error').removeClass('active');
+
+        // Validate product name
+        if ($('#productName').val().trim() === "") {
+            $('#productNameError').addClass('active');
+            isValid = false;
+        }
+
+        // Validate product description
+        if ($('#productDescription').val().trim() === "") {
+            $('#productDescriptionError').addClass('active');
+            isValid = false;
+        }
+
+        // Validate product images
+        if ($('#imageContainer .image-preview-wrapper').length === 0) {
+            $('#productImageError').addClass('active');
+            isValid = false;
+        }
+
+        // Validate SKU code if checkbox is checked
+        if ($('#skuCheck').is(':checked') && $('#skuCode').val().trim() === "") {
+            $('#skuCodeError').addClass('active');
+            isValid = false;
+        }
+
+        // Validate net price
+        let netPrice = $('#netPrice').val().trim();
+        if (netPrice === "" || isNaN(netPrice)) {
+            $('#netPriceError').addClass('active');
+            isValid = false;
+        }
+
+        // Validate list price
+        let listPrice = $('#listPrice').val().trim();
+        if (listPrice === "" || isNaN(listPrice)) {
+            $('#listPriceError').addClass('active');
+            isValid = false;
+        }
+
+        // Validate discount percentage
+        let discountPercentage = $('#discountPercentage').val().trim();
+        if (discountPercentage === "" || isNaN(discountPercentage)) {
+            $('#discountPercentageError').addClass('active');
+            isValid = false;
+        }
+
+        // Validate GST rate
+        let gstRate = $('#gstRate').val().trim();
+        if (gstRate === "" || isNaN(gstRate)) {
+            $('#gstRateError').addClass('active');
+            isValid = false;
+        }
+
+        // Validate stock level
+        let stockLevel = $('#stockLevel').val().trim();
+        if (stockLevel === "" || isNaN(stockLevel)) {
+            $('#stockLevelError').addClass('active');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function calculateFinalPrice() {
+        let netPrice = parseFloat($('#netPrice').val()) || 0;
+        let discountPercentage = parseFloat($('#discountPercentage').val()) || 0;
+        let gstRate = parseFloat($('#gstRate').val()) || 0;
+        let shippingCharges = parseFloat($('#shippingCharges').val()) || 0;
+
+        let discountAmount = netPrice * (discountPercentage / 100);
+        let priceAfterDiscount = netPrice - discountAmount;
+        let gstAmount = priceAfterDiscount * (gstRate / 100);
+        let finalPrice = priceAfterDiscount + gstAmount + shippingCharges;
+
+        return finalPrice.toFixed(2);
+    }
+
+    $('#product-form input, #product-form textarea').on('input change', function() {
+        $('#previewProductName').text($('#productName').val());
+        $('#previewProductDescription').html($('#productDescription').val().replace(/\n/g, '<br>'));
+
+        updatePreviewImage();
+
+        $('#previewListPrice').text('₹' + $('#listPrice').val());
+        $('#previewNetPrice').text('₹' + calculateFinalPrice());
+    });
+});
+
+    </script>
+</body>
+</html>
